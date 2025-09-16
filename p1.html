@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate Storage</title>
+    <style>
+        /* Basic reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f1f5f8;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background-color: #3a6351;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            font-size: 1.8em;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Main Container */
+        .container {
+            width: 80%;
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Heading Style */
+        h2 {
+            color: #3a6351;
+            font-size: 1.6em;
+            margin-bottom: 20px;
+        }
+
+        /* Upload Section */
+        .upload-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        /* Upload Form */
+        form {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        form input[type="file"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        form button {
+            padding: 10px 20px;
+            background-color: #3a6351;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        form button:hover {
+            background-color: #2e4a3d;
+        }
+
+        /* Certificate List */
+        .certificate-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+        }
+
+        .certificate-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+
+        .certificate-list li:hover {
+            transform: translateY(-3px);
+            background-color: #f9fafb;
+        }
+
+        /* Date and Download Link */
+        .certificate-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .date {
+            font-size: 0.9em;
+            color: #666;
+            margin-right: 15px;
+        }
+
+        .certificate-list li a {
+            color: #3a6351;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .certificate-list li a:hover {
+            color: #2e4a3d;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #3a6351;
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+            margin-top: auto;
+            font-size: 0.9em;
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    My Certificate Storage
+</header>
+
+<div class="container">
+    <!-- Upload Section -->
+    <section class="upload-section">
+        <h2>Upload Your Certificate</h2>
+        <form id="uploadForm">
+            <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png" required>
+            <button type="submit">Upload</button>
+        </form>
+    </section>
+
+    <!-- Certificate List Section -->
+    <section>
+        <h2>Your Certificates</h2>
+        <ul class="certificate-list" id="certificateList">
+            <!-- List of uploaded certificates will appear here -->
+        </ul>
+    </section>
+</div>
+
+<footer>
+    &copy; 2024 Certificate Storage. All Rights Reserved.
+</footer>
+
+<script>
+    const form = document.getElementById('uploadForm');
+    const fileInput = document.getElementById('fileInput');
+    const certificateList = document.getElementById('certificateList');
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const file = fileInput.files[0];
+        if (file) {
+            const listItem = document.createElement('li');
+
+            // Get current date
+            const uploadDate = new Date();
+            const formattedDate = `${uploadDate.toLocaleDateString()} ${uploadDate.toLocaleTimeString()}`;
+
+            // Add file name and upload date to list item
+            listItem.innerHTML = `
+                <span>${file.name}</span>
+                <div class="certificate-info">
+                    <span class="date">${formattedDate}</span>
+                </div>
+            `;
+            listItem.querySelector('.certificate-info').appendChild(createDownloadLink(file));
+            certificateList.appendChild(listItem);
+            fileInput.value = ''; // Reset the input
+        }
+    });
+
+    function createDownloadLink(file) {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(file);
+        link.download = file.name;
+        link.textContent = 'Download';
+        link.style.marginLeft = '10px';
+        return link;
+    }
+</script>
+
+</body>
+</html>
